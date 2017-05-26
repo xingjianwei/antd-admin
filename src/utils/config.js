@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'AntD Admin',
+  name: 'License Manage',
   prefix: 'antdAdmin',
-  footerText: 'Ant Design Admin  © 2017 zuiidea',
+  footerText: 'License Manage  © 2017',
   logo: '/logo.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',
