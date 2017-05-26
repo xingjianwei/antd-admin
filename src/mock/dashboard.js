@@ -7,9 +7,9 @@ const Dashboard = Mock.mock({
   'sales|8': [
     {
       'name|+1': 2008,
-      'Clothes|200-500': 1,
-      'Food|180-400': 1,
-      'Electronics|300-550': 1,
+      'BDP|200-500': 1,
+      'BDRT|100-230': 1,
+      'BDCN|120-290': 1,
     },
   ],
   cpu: {
@@ -55,17 +55,17 @@ const Dashboard = Mock.mock({
     },
   ],
   user: {
-    name: 'zuiidea',
-    email: 'zuiiidea@.gmail.com',
-    sales: 3241,
-    sold: 3556,
-    avatar: 'http://tva4.sinaimg.cn/crop.0.0.996.996.180/6ee6a3a3jw8f0ks5pk7btj20ro0rodi0.jpg',
+    name: 'xingjianwei',
+    email: 'xingjianwei@.gmail.com',
+    recieve: 341,
+    accept: 256,
+    avatar: 'http://www.beagledata.com/wp-content/uploads/2015/02/xingjianwei.png',
   },
   'completed|12': [
     {
       'name|+1': 2008,
-      'Task complete|200-1000': 1,
-      'Cards Complete|200-1000': 1,
+      '远程支持|200-1000': 1,
+      '现场安装|200-1000': 1,
     },
   ],
   'comments|5': [
@@ -93,31 +93,31 @@ const Dashboard = Mock.mock({
     },
   ],
   quote: {
-    name: 'Joho Doe',
-    title: 'Graphic Designer',
-    content: 'I\'m selfish, impatient and a little insecure. I make mistakes, I am out of control and at times hard to handle. But if you can\'t handle me at my worst, then you sure as hell don\'t deserve me at my best.',
+    name: '王小明',
+    title: '数据分析',
+    content: 'BDRT（Beagledata Realtime Transaction）是一款大规模高并发支持灵活查询的实时查询引擎，具有高可用、可横向扩展、健壮性的特点。',
     avatar: 'http://img.hb.aicdn.com/bc442cf0cc6f7940dcc567e465048d1a8d634493198c4-sPx5BR_fw236',
   },
   numbers: [
     {
       icon: 'pay-circle-o',
       color: color.green,
-      title: 'Online Review',
-      number: 2781,
+      title: '总许可数',
+      number: 8848,
     }, {
       icon: 'team',
       color: color.blue,
-      title: 'New Customers',
+      title: '总客户数',
       number: 3241,
     }, {
       icon: 'message',
       color: color.purple,
-      title: 'Active Projects',
+      title: '有效许可数',
       number: 253,
     }, {
       icon: 'shopping-cart',
       color: color.red,
-      title: 'Referrals',
+      title: '总节点数',
       number: 4324,
     },
   ],

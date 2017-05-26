@@ -12,7 +12,7 @@ const countUpProps = {
   separator: ',',
 }
 
-function User ({ avatar, name, email, sales, sold }) {
+function User ({ avatar, name, email, recieve, accept }) {
   return (<div className={styles.user}>
     <div className={styles.header}>
       <div className={styles.headerinner}>
@@ -23,17 +23,18 @@ function User ({ avatar, name, email, sales, sold }) {
     </div>
     <div className={styles.number}>
       <div className={styles.item}>
-        <p>EARNING SALES</p>
+        <p>接受申请</p>
         <p style={{ color: color.green }}><CountUp
-          end={sales}
-          prefix="$"
+          end={recieve}
+          prefix="+"
           {...countUpProps}
         /></p>
       </div>
       <div className={styles.item}>
-        <p>ITEM SOLD</p>
+        <p>发放许可</p>
         <p style={{ color: color.blue }}><CountUp
-          end={sold}
+          end={accept}
+          prefix="*"
           {...countUpProps}
         /></p>
       </div>
