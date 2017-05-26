@@ -49,8 +49,8 @@ User.propTypes = {
   avatar: PropTypes.string,
   name: PropTypes.string,
   email: PropTypes.string,
-  sales: PropTypes.number,
-  sold: PropTypes.number,
+  recieve: PropTypes.number,
+  accept: PropTypes.number,
 }
 
 export default User
