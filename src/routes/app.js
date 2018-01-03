@@ -1,20 +1,37 @@
+/* global window */
+/* global document */
 import React from 'react'
+import NProgress from 'nprogress'
 import PropTypes from 'prop-types'
+import pathToRegexp from 'path-to-regexp'
 import { connect } from 'dva'
-import { Layout } from '../components'
-import { classnames, config, menu } from '../utils'
+import { Loader, MyLayout } from 'components'
+import { BackTop, Layout } from 'antd'
+import { classnames, config } from 'utils'
 import { Helmet } from 'react-helmet'
+import { withRouter } from 'dva/router'
+import Error from './error'
 import '../themes/index.less'
 import './app.less'
-import NProgress from 'nprogress'
-const { prefix } = config
 
-const { Header, Bread, Footer, Sider, styles } = Layout
+const { Content, Footer, Sider } = Layout
+const { Header, Bread, styles } = MyLayout
+const { prefix, openPages } = config
+
 let lastHref
 
-const App = ({ children, location, dispatch, app, loading }) => {
-  const { user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys } = app
-  const href = window.location.href
+const App = ({
+  children, dispatch, app, loading, location,
+}) => {
+  const {
+    user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions,
+  } = app
+  let { pathname } = location
+  pathname = pathname.startsWith('/') ? pathname : `/${pathname}`
+  const { iconFontJS, iconFontCSS, logo } = config
+  const current = menu.filter(item => pathToRegexp(item.route || '').exec(pathname))
+  const hasPermission = current.length ? permissions.visit.includes(current[0].id) : false
+  const { href } = window.location
 
   if (lastHref !== href) {
     NProgress.start()
@@ -27,8 +44,8 @@ const App = ({ children, location, dispatch, app, loading }) => {
   const headerProps = {
     menu,
     user,
-    siderFold,
     location,
+    siderFold,
     isNavbar,
     menuPopoverVisible,
     navOpenKeys,
@@ -48,53 +65,62 @@ const App = ({ children, location, dispatch, app, loading }) => {
 
   const siderProps = {
     menu,
+    location,
     siderFold,
     darkTheme,
-    location,
     navOpenKeys,
     changeTheme () {
       dispatch({ type: 'app/switchTheme' })
     },
     changeOpenKeys (openKeys) {
-      localStorage.setItem(`${prefix}navOpenKeys`, JSON.stringify(openKeys))
+      window.localStorage.setItem(`${prefix}navOpenKeys`, JSON.stringify(openKeys))
       dispatch({ type: 'app/handleNavOpenKeys', payload: { navOpenKeys: openKeys } })
     },
   }
 
   const breadProps = {
     menu,
+    location,
   }
 
-  if (config.openPages && config.openPages.indexOf(location.pathname) > -1) {
-    return <div>{children}</div>
+  if (openPages && openPages.includes(pathname)) {
+    return (<div>
+      <Loader fullScreen spinning={loading.effects['app/query']} />
+      {children}
+    </div>)
   }
-
-  const { iconFontJS, iconFontCSS, logo } = config
 
   return (
     <div>
+      <Loader fullScreen spinning={loading.effects['app/query']} />
       <Helmet>
         <title>LICENSE MANAGE</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href={logo} type="image/x-icon" />
-        {iconFontJS && <script src={iconFontJS}></script>}
+        {iconFontJS && <script src={iconFontJS} />}
         {iconFontCSS && <link rel="stylesheet" href={iconFontCSS} />}
       </Helmet>
-      <div className={classnames(styles.layout, { [styles.fold]: isNavbar ? false : siderFold }, { [styles.withnavbar]: isNavbar })}>
-        {!isNavbar ? <aside className={classnames(styles.sider, { [styles.light]: !darkTheme })}>
-          <Sider {...siderProps} />
-        </aside> : ''}
-        <div className={styles.main}>
+
+      <Layout className={classnames({ [styles.dark]: darkTheme, [styles.light]: !darkTheme })}>
+        {!isNavbar && <Sider
+          trigger={null}
+          collapsible
+          collapsed={siderFold}
+        >
+          {siderProps.menu.length === 0 ? null : <MyLayout.Sider {...siderProps} />}
+        </Sider>}
+        <Layout style={{ height: '100vh', overflow: 'scroll' }} id="mainContainer">
+          <BackTop target={() => document.getElementById('mainContainer')} />
           <Header {...headerProps} />
-          <Bread {...breadProps} location={location} />
-          <div className={styles.container}>
-            <div className={styles.content}>
-              {children}
-            </div>
-          </div>
-          <Footer />
-        </div>
-      </div>
+          <Content>
+            <Bread {...breadProps} />
+            {hasPermission ? children : <Error />}
+          </Content>
+          <Footer >
+            {config.footerText}
+          </Footer>
+        </Layout>
+      </Layout>
     </div>
   )
 }
@@ -107,4 +133,4 @@ App.propTypes = {
   loading: PropTypes.object,
 }
 
-export default connect(({ app, loading }) => ({ app, loading }))(App)
+export default withRouter(connect(({ app, loading }) => ({ app, loading }))(App))
